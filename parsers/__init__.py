@@ -1,4 +1,4 @@
-"""Parsers for TBGMiner."""
+"""Parsers for TBGScraper."""
 
 __all__="lxml html".split() # Laziology
 
