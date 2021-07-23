@@ -1,5 +1,5 @@
-__version__ = "0.1.0"
 """A tool to mine the TBGs.""" # __doc__
+__version__ = "0.1.1"
 PAGENAME = "TBGScraper"
 import json, sys, time, getopt, random, requests, os
 from shutil import copyfile
@@ -23,6 +23,7 @@ delay = 0
 skip = False
 help = None
 clean = True
+secret = False # shhhh
 info = f'''
 Usage: 
 	scraper.py <args> <start> <end>
@@ -38,7 +39,7 @@ Arguments:
 	Scraper:
 		-p, --parser <num>        : Choose a parser. (Available parsers in the "parsers" directory)
 		-d, --delay <time>        : Random delay to avoid spam (default {delay} seconds)
-		-r, --rng <time>          : Range of RDTAS (default {range} seconds)
+		-r, --rng <time>          : Range of RDTAS (default {rng} seconds)
 	
 	Miscellanous:
 		-h                        : Send help
@@ -95,7 +96,7 @@ if type(clean)==str: clean = clean.lower() in "true 1 yes".split()
 if type(checkpoint)==str: checkpoint = int(checkpoint)
 if type(verbose)==str: verbose = int(verbose)
 if type(delay)==str: delay = float(delay)
-if type(range)==str: range = float(range)
+if type(rng)==str: range = float(rng)
 
 # Choose parser
 if parser=="":
@@ -191,6 +192,9 @@ for x in count:
 		except: pass
 		finally: 
 			with open(backup,"w") as f: f.write(json.dumps({"posts":posts,"start":x,"end":end}))
+			if secret: os.remove(secback) # shhh
+			else:
+				if secback: copyfile(secback, backup) # Make sure secondary backup matches backup 
 		
 # Done!
 with open(output,"w") as f: f.write(json.dumps(posts))
